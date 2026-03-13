@@ -1,0 +1,9 @@
+node_modules/
+.env
+*.db
+*.db-wal
+*.db-shm
+memory.json
+dragonclaw-data/
+.DS_Store
+*.tar.gz
