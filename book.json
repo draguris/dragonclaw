@@ -1,0 +1,26 @@
+{
+  "title": "DragonClaw 龙爪 Documentation",
+  "description": "Complete documentation for DragonClaw — the crypto-native AI agent for the Chinese ecosystem.",
+  "author": "DragonClaw Team",
+  "language": "en",
+  "gitbook": "3.2.3",
+  "root": "./docs",
+  "structure": {
+    "summary": "SUMMARY.md"
+  },
+  "plugins": [
+    "theme-default",
+    "search",
+    "fontsettings",
+    "sharing"
+  ],
+  "pluginsConfig": {
+    "theme-default": {
+      "showLevel": true
+    },
+    "sharing": {
+      "github": true,
+      "github_link": "https://github.com/draguris/dragonclaw"
+    }
+  }
+}

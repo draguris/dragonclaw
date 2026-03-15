@@ -1,0 +1,57 @@
+# DragonClaw 龙爪 Configuration
+# 
+# Run `dragonclaw onboard` for interactive setup,
+# or edit this file directly.
+#
+# Docs: https://dragonclaw.dev/docs/config
+
+llm:
+  # Options: deepseek, qwen, kimi, glm, openai, anthropic, openrouter, local
+  provider: deepseek
+  apiKey: "YOUR_API_KEY_HERE"
+  # model: deepseek-chat          # auto-detected from provider
+  # baseUrl: null                  # override for local/custom endpoints
+  # maxTokens: 4096
+  # temperature: 0.7
+
+binance:
+  # Optional — most skills work without keys.
+  # Only needed for spot trading.
+  # apiKey: "YOUR_BINANCE_API_KEY"
+  # secretKey: "YOUR_BINANCE_SECRET"
+  testnet: true                    # always start with testnet
+
+connectors:
+  telegram:
+    enabled: false
+    # token: "BOT_TOKEN_FROM_BOTFATHER"
+
+  dingtalk:
+    enabled: false
+    # robotWebhook: "https://oapi.dingtalk.com/robot/send?access_token=..."
+    # appSecret: "YOUR_DINGTALK_SECRET"
+
+  feishu:
+    enabled: false
+    # appId: "YOUR_FEISHU_APP_ID"
+    # appSecret: "YOUR_FEISHU_APP_SECRET"
+
+  discord:
+    enabled: false
+    # token: "YOUR_DISCORD_BOT_TOKEN"
+
+  wechat:
+    enabled: false
+    mode: official-account
+    # appId: "YOUR_WECHAT_APP_ID"
+    # appSecret: "YOUR_WECHAT_APP_SECRET"
+
+gateway:
+  port: 18789
+  host: 127.0.0.1
+
+agent:
+  name: "龙爪"
+  language: zh                     # zh | en | auto
+  confirmBeforeTrade: true
+  heartbeatCron: "0 9 * * *"      # daily 9am check-in

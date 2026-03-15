@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+  dragonclaw:
+    build: .
+    container_name: dragonclaw
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:18789:18789"  # Only bind to localhost — Nginx will proxy
+    volumes:
+      - dragonclaw-data:/data
+      - ./config:/app/config:ro
+    environment:
+      - NODE_ENV=production
+      - DRAGONCLAW_DATA_DIR=/data
+      # Secrets via env vars (never in files)
+      - DRAGONCLAW_LLM_PROVIDER=${DRAGONCLAW_LLM_PROVIDER:-deepseek}
+      - DRAGONCLAW_LLM_API_KEY=${DRAGONCLAW_LLM_API_KEY}
+      - DRAGONCLAW_LLM_MODEL=${DRAGONCLAW_LLM_MODEL:-}
+      - DRAGONCLAW_GATEWAY_TOKEN=${DRAGONCLAW_GATEWAY_TOKEN}
+      - BINANCE_API_KEY=${BINANCE_API_KEY:-}
+      - BINANCE_API_SECRET=${BINANCE_API_SECRET:-}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-}
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "1.0"
+        reservations:
+          memory: 128M
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:18789/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+volumes:
+  dragonclaw-data:
+    driver: local

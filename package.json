@@ -1,0 +1,32 @@
+{
+  "name": "dragonclaw",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "DragonClaw 龙爪 — Crypto-native AI agent for the Chinese ecosystem. Built-in Binance skills, OpenClaw compatible.",
+  "main": "src/index.js",
+  "bin": {
+    "dragonclaw": "./src/cli.js"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "onboard": "node src/cli.js onboard",
+    "dev": "node --watch src/index.js",
+    "test": "node --test test/index.test.js",
+    "doctor": "node src/cli.js doctor",
+    "deploy": "bash deploy/setup-vps.sh",
+    "update": "bash deploy/update.sh"
+  },
+  "keywords": ["ai", "agent", "binance", "crypto", "chinese", "wechat", "dingtalk", "feishu", "openclaw"],
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "ws": "^8.16.0",
+    "yaml": "^2.3.4",
+    "better-sqlite3": "^11.0.0",
+    "node-cron": "^3.0.3",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {}
+}

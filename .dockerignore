@@ -1,0 +1,8 @@
+node_modules
+.git
+.env
+*.tar.gz
+web/
+docs/
+README.md
+.DS_Store
