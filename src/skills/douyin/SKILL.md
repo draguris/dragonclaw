@@ -1,225 +1,235 @@
 ---
-title: Douyin (抖音) Trends, Commerce & Creator Analytics
+title: Douyin Hot Search & Trend-to-Trade Pipeline
 slug: douyin
-description: Search Douyin (抖音/TikTok China) for trending videos, viral hashtags, livestream commerce data, product prices from Douyin Shop, and creator analytics. Use when user asks about Douyin, 抖音, trending videos in China, viral content, livestream sales, Douyin Shop prices, or wants to track what's going viral.
-version: 1.0.0
+description: Monitor Douyin (TikTok China) hot search, trending videos, viral memes, livestream commerce, creator analytics, and trending music. DragonClaw exclusive — automatic pipeline that detects crypto-related viral trends, searches for matching tokens across Binance/Four.meme/GMGN/Aster, audits contract safety, and auto-buys or alerts. Use when user asks about Douyin, TikTok China, Chinese social media trends, viral memes, trend trading, or social-to-trade pipeline.
+version: 2.0.0
 author: dragonclaw
 license: MIT
 ---
 
-# Douyin 抖音 — Trends, Commerce & Creator Analytics
+# Douyin — Hot Search & Trend-to-Trade Pipeline
 
 ## When to Use
 
-- User asks about trending content on 抖音 / Douyin
-- User wants to know what's going viral in China right now
-- User asks about Douyin Shop (抖音商城) product prices
-- User wants livestream commerce data (who's selling, viewer counts, GMV)
-- User asks about a creator's follower count, engagement, or content
-- User mentions 抖音, Douyin, 直播带货, 抖音商城, 热搜, 上热门
-- User wants to track meme trends that could affect token prices
-- User asks about trending music or sounds on Douyin
+- User asks about Douyin hot search or trending topics
+- User wants to find crypto narratives from Chinese social media
+- User wants to auto-trade based on viral Douyin memes
+- User asks about Xiaohongshu + Douyin combined trend monitoring
+- User mentions social media alpha, TikTok trading, or meme discovery
 
-## Overview
+## DragonClaw Exclusive: Trend-to-Trade Pipeline
 
-Douyin is China's dominant short video platform with 750M+ daily active users. It drives cultural trends, meme cycles, consumer purchasing decisions, and increasingly crypto sentiment in China. This skill covers four areas: trending content discovery, product commerce, livestream tracking, and creator analytics.
+This is the feature that doesn't exist anywhere else.
 
-## No API Key Required
+Western agents can't access Douyin. OpenClaw's skills are passive — they wait for you to ask. DragonClaw's pipeline runs in the background, watching Chinese social media 24/7, and turns viral trends into trades automatically.
 
-This skill uses publicly accessible Douyin web endpoints. No authentication needed.
+### How It Works
 
-## Endpoints
+1. **Monitor**: Scans Douyin hot search + Xiaohongshu trending every 60 seconds
+2. **Filter**: Checks if the trend contains crypto signals (币, meme, pump, 暴涨, etc.)
+3. **Extract**: Pulls potential token tickers from the trend ($PEPE, DOGE币, etc.)
+4. **Search**: Looks for matching tokens across Binance, Four.meme, GMGN, and Aster simultaneously
+5. **Audit**: Runs safety check — honeypot detection, tax rate, dev holdings
+6. **Execute**: Auto-buys (if enabled) or sends alert to DingTalk/Feishu/Telegram
 
-### Trending Hashtags / Hot Search
-
-Fetch the current Douyin hot search list (equivalent of trending topics).
+### Start Pipeline
 
 ```tool
-{"tool": "shell", "command": "curl -s 'https://www.douyin.com/aweme/v1/web/hot/search/list/' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36' -H 'Referer: https://www.douyin.com/' 2>/dev/null | head -c 5000"}
+{"tool": "douyin_pipeline", "action": "start", "config": {
+  "minViews": 5000000,
+  "autoTrade": false,
+  "platforms": ["binance", "fourmeme", "gmgn"],
+  "xiaohongshuEnabled": true,
+  "notifyOnTrend": true,
+  "notifyOnMatch": true
+}}
 ```
 
-### Search Videos by Keyword
-
-Search for videos matching a keyword. Returns video titles, play counts, like counts, and creator info.
+### Stop Pipeline
 
 ```tool
-{"tool": "shell", "command": "curl -s 'https://www.douyin.com/aweme/v1/web/general/search/single/' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36' -H 'Referer: https://www.douyin.com/' -G --data-urlencode 'keyword=SEARCH_TERM' --data-urlencode 'count=10' --data-urlencode 'offset=0' 2>/dev/null | head -c 5000"}
+{"tool": "douyin_pipeline", "action": "stop"}
 ```
 
-### Search Products on Douyin Shop
-
-Search for products listed on Douyin's integrated shopping platform.
+### Enable Auto-Trade
 
 ```tool
-{"tool": "shell", "command": "curl -s 'https://www.douyin.com/aweme/v1/web/mall/search/' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36' -H 'Referer: https://www.douyin.com/' -G --data-urlencode 'keyword=PRODUCT_NAME' --data-urlencode 'count=10' 2>/dev/null | head -c 5000"}
+{"tool": "douyin_pipeline", "action": "update", "config": {
+  "autoTrade": true,
+  "buyAmountBnb": "0.01",
+  "buyAmountUsdt": 10,
+  "maxTradesPerHour": 3
+}}
 ```
 
-### Livestream Discovery
-
-Find currently active livestreams or search for livestreams by category.
+### Check Status
 
 ```tool
-{"tool": "shell", "command": "curl -s 'https://www.douyin.com/aweme/v1/web/live/search/' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36' -H 'Referer: https://www.douyin.com/' -G --data-urlencode 'keyword=SEARCH_TERM' --data-urlencode 'count=10' 2>/dev/null | head -c 5000"}
+{"tool": "douyin_pipeline", "action": "status"}
 ```
 
-### Creator Profile Lookup
+### Pipeline Config
 
-Get public profile data for a Douyin creator by searching their name.
+| Option | Default | Description |
+|--------|---------|-------------|
+| minViews | 5,000,000 | Minimum views to trigger |
+| minLikes | 100,000 | Minimum likes to trigger |
+| autoTrade | false | false = alert only, true = auto-buy |
+| buyAmountUsdt | 10 | USDT per trade (Binance) |
+| buyAmountBnb | "0.01" | BNB per trade (Four.meme) |
+| platforms | all | Where to search: binance, fourmeme, gmgn, aster |
+| requireAudit | true | Must pass safety check before buy |
+| maxTaxRate | 5 | Max tax % for Four.meme tokens |
+| cooldownMs | 300000 | 5 min cooldown per keyword |
+| maxTradesPerHour | 3 | Rate limit on auto-trades |
+| xiaohongshuEnabled | true | Also monitor Xiaohongshu |
 
-```tool
-{"tool": "shell", "command": "curl -s 'https://www.douyin.com/aweme/v1/web/discover/search/' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36' -H 'Referer: https://www.douyin.com/' -G --data-urlencode 'keyword=CREATOR_NAME' --data-urlencode 'type=1' --data-urlencode 'count=5' 2>/dev/null | head -c 5000"}
+### Example Flow
+
+```
+[抖音热搜] "brainrot挑战" — 1200万播放
+
+龙爪检测到加密信号:
+  关键词: brainrot
+  热度: 1200万
+  来源: 抖音
+
+搜索代币 $BRAINROT:
+  ✓ Four.meme: 找到 BRAINROT (BSC) — 0x1a2b...
+  ✓ GMGN-SOL: 找到 BRAINROT (Solana) — 9abc...
+  ✗ Binance: 未找到
+  ✗ Aster: 未找到
+
+安全审计:
+  Four.meme: ✓ V2 | ✓ 无税 | ✓ 未毕业
+  GMGN-SOL: ✓ 非蜜罐 | ✓ 买入税 0% | ✓ 卖出税 0%
+
+→ 自动买入 0.01 BNB (Four.meme BSC)
+→ 交易哈希: 0xabc...
+
+来源: 抖音热搜 → 代币搜索 → 安全审计 → 自动买入
 ```
 
-### Trending Music / Sounds
+### Example Conversations
 
-Get the current trending music and sounds on Douyin.
+```
+用户: 帮我监控抖音，有 meme 热搜就提醒我
+龙爪: 已启动抖音趋势监控:
 
-```tool
-{"tool": "shell", "command": "curl -s 'https://www.douyin.com/aweme/v1/web/hot/music/list/' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36' -H 'Referer: https://www.douyin.com/' 2>/dev/null | head -c 3000"}
+  来源: 抖音 + 小红书
+  最低热度: 500万
+  自动交易: 关闭 (仅提醒)
+  搜索平台: Binance, Four.meme, GMGN, Aster
+
+  发现加密相关热搜会自动搜索代币并通知你。
+  说 "开启自动交易" 可以自动买入。
 ```
 
-### Alternative: Web Scrape Fallback
+```
+用户: 抖音上什么在火？有没有相关的币？
+龙爪: 当前抖音热搜 (加密相关):
 
-If API endpoints return empty or blocked results, fall back to scraping public search pages.
+1. "brainrot挑战" — 1200万播放
+   → $BRAINROT 在 Four.meme 和 Solana 上找到
+   → 审计通过: 无税、非蜜罐
+
+2. "AI画图翻车" — 890万播放
+   → 未找到直接相关代币
+
+3. "dogwifhat二创" — 650万播放
+   → $WIF 在 Binance 有交易对
+   → 当前价格: $1.82 (+12.3% 24h)
+```
+
+## Manual Douyin Queries
+
+### Hot Search
 
 ```tool
-{"tool": "shell", "command": "curl -sL 'https://www.douyin.com/search/SEARCH_TERM' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36' 2>/dev/null | grep -oP '\"desc\":\"[^\"]*\"|\"digg_count\":[0-9]*|\"play_count\":[0-9]*|\"nickname\":\"[^\"]*\"' | head -30"}
+{"tool": "douyin", "action": "hotSearch"}
+```
+
+### Search Videos
+
+```tool
+{"tool": "douyin", "action": "searchVideo", "params": {"keyword": "PEPE币"}}
+```
+
+### Creator Analytics
+
+```tool
+{"tool": "douyin", "action": "creatorInfo", "params": {"userId": "USER_ID"}}
+```
+
+### Trending Music
+
+```tool
+{"tool": "douyin", "action": "trendingMusic"}
 ```
 
 ## Display Guidelines
 
-### For Trending / Hot Search
+### Trend Alert
 ```
-抖音热搜榜:
+抖音热搜检测到加密信号
 
-1. #成都美食探店 — 5.2亿播放
-2. #春季穿搭 — 3.8亿播放
-3. #比特币突破新高 — 1.2亿播放
-4. #AI画图挑战 — 9800万播放
-5. #减脂餐分享 — 8700万播放
-...
+关键词: brainrot挑战
+热度: 1200万播放
+来源: 抖音
 ```
 
-### For Video Search
+### Token Match
 ```
-抖音搜索 "[关键词]" 结果:
+抖音趋势 → 代币匹配
 
-1. [视频标题]
-   创作者: XX | 播放: XX万 | 点赞: XX万 | 评论: XX
-   
-2. [视频标题]
-   创作者: XX | 播放: XX万 | 点赞: XX万 | 评论: XX
-```
+趋势: brainrot挑战 (1200万热度)
+代币: $BRAINROT
+平台: Four.meme (BSC)
+价格: 0.00023 BNB
+合约: 0x1a2b3c...
 
-### For Product Search (Douyin Shop)
-```
-抖音商城搜索 "[产品]":
-
-1. [产品名称]
-   价格: ¥XX | 已售: XX件 | 店铺评分: X.X
-   
-2. [产品名称]
-   价格: ¥XX | 已售: XX件 | 店铺评分: X.X
+发送 "买 BRAINROT" 手动交易
 ```
 
-### For Livestream Data
+## Safety Rules
+
+1. Auto-trade is OFF by default — user must explicitly enable
+2. Always run token audit before any trade
+3. Rate limit: max 3 auto-trades per hour
+4. 5 minute cooldown per keyword to prevent duplicate trades
+5. Never trade tokens that fail audit (honeypot, high tax, V1)
+6. Always show trend source + audit result in notifications
+
+## Cross-Skill Integration
+
+- **Douyin trend → Four.meme sniper**: When trend matches a new Four.meme token, the sniper can prioritize it
+- **Douyin trend → Binance spot**: Buy trending tokens on Binance if they exist
+- **Douyin trend → GMGN**: Search across Solana/BSC/Base for matching tokens
+- **Douyin trend → Aster**: Open futures position to ride the narrative
+- **Xiaohongshu + Douyin**: Combined signal is stronger than either alone
+
+## Config (dragonclaw.yaml)
+
+```yaml
+douyinPipeline:
+  enabled: false
+  autoTrade: false
+  minViews: 5000000
+  buyAmountBnb: "0.01"
+  buyAmountUsdt: 10
+  platforms: ["binance", "fourmeme", "gmgn", "aster"]
+  requireAudit: true
+  maxTradesPerHour: 3
+  xiaohongshuEnabled: true
+  notifyOnTrend: true
+  notifyOnMatch: true
+  notifyOnTrade: true
 ```
-抖音直播 "[关键词]":
-
-1. [主播名] — 正在直播
-   观看人数: XX万 | 品类: 美妆
-   在售商品: XX件 | 预估GMV: ¥XX万
-
-2. [主播名] — 正在直播
-   观看人数: XX万 | 品类: 数码
-   在售商品: XX件 | 预估GMV: ¥XX万
-```
-
-### For Creator Analytics
-```
-抖音创作者 [名字]:
-
-粉丝: XX万
-获赞: XX万
-作品数: XX
-平均播放: XX万
-主要领域: 美食 / 搞笑 / 知识 / ...
-近期爆款: [视频标题] — XX万播放
-```
-
-### For Trending Music
-```
-抖音热门音乐:
-
-1. [歌名] — [歌手]
-   使用量: XX万条视频
-
-2. [歌名] — [歌手]
-   使用量: XX万条视频
-```
-
-## Crypto Relevance
-
-Douyin trends frequently move crypto markets in China. When analyzing trends for crypto relevance:
-
-- Hashtags mentioning 比特币, 以太坊, Web3, 区块链, NFT, meme币 are direct signals
-- Viral meme formats on Douyin often spawn meme tokens within 24-48 hours
-- Celebrity or influencer mentions of crypto topics can trigger short term pumps
-- Track Douyin hot search alongside Binance meme-rush skill for early entry signals
-
-When a user asks about meme trends or what might pump next, cross reference Douyin trending with the Binance meme-rush and market-rank skills for a complete picture.
-
-## Common Use Cases
-
-### Trend Discovery
-```
-用户: 抖音上现在什么最火？
-龙爪: 正在获取抖音热搜榜...
-```
-
-### Product Research
-```
-用户: 抖音商城上这个蓝牙耳机多少钱？
-龙爪: 正在搜索抖音商城...
-```
-
-### Livestream Shopping
-```
-用户: 现在有谁在抖音直播卖手机？
-龙爪: 正在搜索手机相关直播...
-```
-
-### Crypto Sentiment
-```
-用户: 抖音上最近有什么跟币圈相关的热门内容？
-龙爪: 正在搜索加密货币相关内容...
-```
-
-### Creator Research
-```
-用户: 帮我查一下这个抖音博主的数据
-龙爪: 正在查询创作者信息...
-```
-
-### Meme Tracking
-```
-用户: 抖音上什么meme最火？看看有没有相关的meme币
-龙爪: 正在分析抖音热门meme趋势，同时查询相关meme代币...
-```
-
-## Error Handling
-
-If endpoints return empty or blocked results:
-- Tell the user Douyin may be rate limiting requests
-- Suggest trying again in a few minutes or with different keywords
-- Offer to use the web scrape fallback method
-- Never fabricate results. If no data is returned say so clearly
 
 ## Notes
 
-- All searches work best with Chinese keywords
-- Douyin content cycles fast. Trending topics can shift completely within hours
-- 播放量 (play count) is the primary metric. Videos with 100万+ plays are considered viral
-- 直播带货 (livestream commerce) data is most active between 7pm-11pm CST
-- Douyin Shop (抖音商城) prices are often lower than Taobao/JD due to direct-from-factory models
-- Cross reference Douyin trends with Xiaohongshu (小红书) for a complete picture of what Chinese consumers care about right now
+- Douyin API may have rate limits or anti-scraping measures
+- Xiaohongshu trends supplement Douyin for broader coverage
+- Token tickers extracted from trends may be noisy — audit layer is critical
+- Western agents literally cannot do this because they don't have Douyin access
+- This is pure alpha infrastructure: social media trend → token discovery → safety audit → execution
