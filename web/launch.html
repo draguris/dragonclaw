@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DragonLaunch 龙爪发射台 — BSC Memecoin Launchpad</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 140'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23ff3b3b'/%3E%3Cstop offset='100%25' stop-color='%23f5a623'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M70 12c-8 0-14 8-18 16-6-4-16-6-20 2-3 6 2 14 8 18-10 4-18 14-18 26 0 10 6 18 14 24-2 6-2 14 2 20 4 6 12 8 18 6l4 8c2 4 6 6 10 6s8-2 10-6l4-8c6 2 14 0 18-6 4-6 4-14 2-20 8-6 14-14 14-24 0-12-8-22-18-26 6-4 11-12 8-18-4-8-14-6-20-2C84 20 78 12 70 12z' fill='url(%23g)'/%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+--bg:#0a0a0a;--bg2:#111;--bg3:#1a1a1a;--border:#222;--border2:#333;
+--text:#fff;--text2:#aaa;--text3:#666;
+--red:#ff3b3b;--gold:#f5a623;--green:#28c840;
+--grad:linear-gradient(135deg,#ff3b3b,#f5a623);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans SC',-apple-system,sans-serif;min-height:100vh;overflow-x:hidden}
+a{color:var(--gold);text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;outline:none}
+
+/* ═══ NAV ═══ */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;background:rgba(10,10,10,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-logo{display:flex;align-items:center;gap:0.75rem}
+.nav-logo svg{width:28px;height:28px}
+.nav-logo span{font-size:1rem;font-weight:700;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:1.5rem;align-items:center}
+.nav-links a{color:var(--text2);font-size:0.85rem;transition:color 0.2s}
+.nav-links a:hover{color:var(--text)}
+.btn-connect{background:var(--grad);color:#000;font-weight:700;padding:0.5rem 1.25rem;border-radius:8px;font-size:0.82rem;transition:opacity 0.2s}
+.btn-connect:hover{opacity:0.85}
+
+/* ═══ HERO ═══ */
+.hero{padding:8rem 2rem 4rem;text-align:center;position:relative}
+.hero::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(255,59,59,0.08) 0%,transparent 70%);pointer-events:none}
+.hero h1{font-size:3.5rem;font-weight:900;line-height:1.1;margin-bottom:1rem}
+.hero h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:var(--text2);font-size:1.1rem;max-width:600px;margin:0 auto 2.5rem;line-height:1.7}
+.hero-stats{display:flex;gap:2.5rem;justify-content:center;margin-bottom:3rem}
+.hero-stat{text-align:center}
+.hero-stat .num{font-size:2rem;font-weight:900;font-family:'Space Mono',monospace;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-stat .label{color:var(--text3);font-size:0.8rem;margin-top:0.25rem}
+
+/* ═══ CREATE FORM ═══ */
+.section{padding:3rem 2rem;max-width:900px;margin:0 auto}
+.section-title{font-size:1.5rem;font-weight:700;margin-bottom:1.5rem;display:flex;align-items:center;gap:0.5rem}
+.section-title .accent{color:var(--red)}
+
+.create-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:2rem;position:relative;overflow:hidden}
+.create-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--grad)}
+
+.form-group{margin-bottom:1.25rem}
+.form-label{display:block;font-size:0.82rem;color:var(--text2);margin-bottom:0.4rem;font-weight:500}
+.form-input{width:100%;padding:0.75rem 1rem;background:var(--bg);border:1px solid var(--border2);border-radius:10px;color:var(--text);font-size:0.95rem;font-family:inherit;transition:border-color 0.2s}
+.form-input:focus{border-color:var(--gold);outline:none}
+.form-input::placeholder{color:var(--text3)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.form-hint{font-size:0.75rem;color:var(--text3);margin-top:0.3rem}
+
+.btn-launch{width:100%;padding:1rem;background:var(--grad);color:#000;font-weight:700;font-size:1.05rem;border-radius:12px;margin-top:1.5rem;transition:opacity 0.2s,transform 0.1s}
+.btn-launch:hover{opacity:0.9}
+.btn-launch:active{transform:scale(0.98)}
+.btn-launch:disabled{opacity:0.4;cursor:not-allowed}
+
+/* ═══ TOKEN LIST ═══ */
+.tokens-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem}
+.token-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;transition:border-color 0.2s,transform 0.2s;cursor:pointer}
+.token-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.token-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem}
+.token-name{font-weight:700;font-size:1rem}
+.token-symbol{color:var(--gold);font-size:0.85rem;font-family:'Space Mono',monospace}
+.token-badge{font-size:0.7rem;padding:3px 8px;border-radius:20px}
+.token-badge.live{background:rgba(40,200,64,0.1);color:var(--green);border:1px solid rgba(40,200,64,0.2)}
+.token-badge.graduated{background:rgba(245,166,35,0.1);color:var(--gold);border:1px solid rgba(245,166,35,0.2)}
+
+.progress-bar{height:6px;background:var(--bg);border-radius:3px;margin:0.75rem 0 0.5rem;overflow:hidden}
+.progress-fill{height:100%;background:var(--grad);border-radius:3px;transition:width 0.5s}
+.token-stats{display:flex;justify-content:space-between;font-size:0.78rem;color:var(--text3)}
+.token-stats .val{color:var(--text2);font-family:'Space Mono',monospace}
+
+/* ═══ BUY/SELL MODAL ═══ */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);z-index:200;display:none;align-items:center;justify-content:center}
+.modal-overlay.active{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:16px;padding:2rem;width:90%;max-width:480px;position:relative}
+.modal-close{position:absolute;top:1rem;right:1rem;background:none;color:var(--text3);font-size:1.5rem;line-height:1}
+.modal-close:hover{color:var(--text)}
+.modal h2{font-size:1.25rem;margin-bottom:0.5rem}
+.modal .token-info{color:var(--text2);font-size:0.85rem;margin-bottom:1.5rem}
+.tab-row{display:flex;gap:0.5rem;margin-bottom:1.25rem}
+.tab-btn{flex:1;padding:0.6rem;border-radius:8px;font-size:0.9rem;font-weight:600;background:var(--bg);color:var(--text3);border:1px solid var(--border);transition:all 0.2s}
+.tab-btn.active{background:var(--bg3);color:var(--text);border-color:var(--gold)}
+.btn-buy{background:var(--green);color:#000;font-weight:700;width:100%;padding:0.85rem;border-radius:10px;font-size:1rem;margin-top:1rem}
+.btn-sell{background:var(--red);color:#fff;font-weight:700;width:100%;padding:0.85rem;border-radius:10px;font-size:1rem;margin-top:1rem}
+
+/* ═══ HOW IT WORKS ═══ */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:1.5rem}
+.step{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.25rem;text-align:center}
+.step-num{font-size:2rem;font-weight:900;font-family:'Space Mono',monospace;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:0.5rem}
+.step-title{font-weight:600;font-size:0.9rem;margin-bottom:0.3rem}
+.step-desc{color:var(--text3);font-size:0.78rem;line-height:1.5}
+
+/* ═══ FOOTER ═══ */
+.footer{text-align:center;padding:3rem 2rem;border-top:1px solid var(--border);margin-top:3rem;color:var(--text3);font-size:0.8rem}
+.footer a{color:var(--text2)}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:768px){
+.hero h1{font-size:2rem}
+.hero-stats{flex-direction:column;gap:1rem}
+.form-row{grid-template-columns:1fr}
+.steps{grid-template-columns:1fr 1fr}
+.tokens-grid{grid-template-columns:1fr}
+}
+
+/* ═══ TOAST ═══ */
+.toast{position:fixed;bottom:2rem;right:2rem;background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:1rem 1.5rem;z-index:300;display:none;max-width:400px;font-size:0.85rem;box-shadow:0 10px 40px rgba(0,0,0,0.5)}
+.toast.show{display:block;animation:slideIn 0.3s}
+.toast .toast-title{font-weight:700;margin-bottom:0.25rem}
+.toast .toast-msg{color:var(--text2)}
+@keyframes slideIn{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+<div class="nav-logo">
+<svg viewBox="0 0 140 140"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ff3b3b"/><stop offset="100%" stop-color="#f5a623"/></linearGradient></defs><path d="M70 12c-8 0-14 8-18 16-6-4-16-6-20 2-3 6 2 14 8 18-10 4-18 14-18 26 0 10 6 18 14 24-2 6-2 14 2 20 4 6 12 8 18 6l4 8c2 4 6 6 10 6s8-2 10-6l4-8c6 2 14 0 18-6 4-6 4-14 2-20 8-6 14-14 14-24 0-12-8-22-18-26 6-4 11-12 8-18-4-8-14-6-20-2C84 20 78 12 70 12z" fill="url(#g)"/></svg>
+<span>DragonLaunch</span>
+</div>
+<div class="nav-links">
+<a href="#create">创建代币</a>
+<a href="#tokens">正在发射</a>
+<a href="#how">工作原理</a>
+<a href="https://dragonclaw.asia" target="_blank">DragonClaw</a>
+<button class="btn-connect" id="connectBtn" onclick="connectWallet()">连接钱包</button>
+</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+<h1>一句话<em>发币</em><br>直通 PancakeSwap</h1>
+<p>龙爪发射台。创建代币 → 联合曲线销售 → 自动毕业到 PancakeSwap V2。LP 永久烧毁，不可撤回。BSC 原生。</p>
+<div class="hero-stats">
+<div class="hero-stat"><div class="num" id="statLaunches">0</div><div class="label">代币已发射</div></div>
+<div class="hero-stat"><div class="num" id="statGraduated">0</div><div class="label">已毕业到 PCS</div></div>
+<div class="hero-stat"><div class="num" id="statBnb">0</div><div class="label">BNB 总筹集</div></div>
+</div>
+</section>
+
+<!-- CREATE -->
+<section class="section" id="create">
+<div class="section-title"><span class="accent">⟩</span> 创建代币</div>
+<div class="create-card">
+<div class="form-row">
+<div class="form-group">
+<label class="form-label">代币名称</label>
+<input class="form-input" id="tokenName" placeholder="DragonCat">
+</div>
+<div class="form-group">
+<label class="form-label">代币代号</label>
+<input class="form-input" id="tokenSymbol" placeholder="DCAT" maxlength="10" style="text-transform:uppercase">
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label class="form-label">总量</label>
+<input class="form-input" id="tokenSupply" placeholder="1000000000" type="number">
+<div class="form-hint">默认 10 亿。80% 进入曲线，20% 给创建者。</div>
+</div>
+<div class="form-group">
+<label class="form-label">毕业目标 (BNB)</label>
+<input class="form-input" id="tokenTarget" placeholder="24" type="number">
+<div class="form-hint">筹集到此金额后自动上 PancakeSwap。默认 24 BNB。</div>
+</div>
+</div>
+<div class="form-group">
+<label class="form-label">描述 (可选)</label>
+<input class="form-input" id="tokenDesc" placeholder="最强龙猫 meme 币...">
+</div>
+
+<div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:1rem;margin-top:1rem">
+<div style="display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:0.5rem"><span style="color:var(--text3)">创建费</span><span style="font-family:'Space Mono',monospace">~0.01 BNB</span></div>
+<div style="display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:0.5rem"><span style="color:var(--text3)">平台手续费</span><span style="font-family:'Space Mono',monospace">1%</span></div>
+<div style="display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:0.5rem"><span style="color:var(--text3)">LP 处理</span><span style="color:var(--green)">毕业后永久烧毁</span></div>
+<div style="display:flex;justify-content:space-between;font-size:0.85rem"><span style="color:var(--text3)">链</span><span>BSC (BNB Smart Chain)</span></div>
+</div>
+
+<button class="btn-launch" id="launchBtn" onclick="createToken()" disabled>连接钱包后发射</button>
+</div>
+</section>
+
+<!-- TOKENS -->
+<section class="section" id="tokens">
+<div class="section-title"><span class="accent">⟩</span> 正在发射</div>
+<div class="tokens-grid" id="tokensGrid">
+<!-- Demo tokens -->
+<div class="token-card" onclick="openModal('demo1')">
+<div class="token-header">
+<div><span class="token-name">DragonCat</span> <span class="token-symbol">$DCAT</span></div>
+<span class="token-badge live">发射中</span>
+</div>
+<div class="progress-bar"><div class="progress-fill" style="width:64%"></div></div>
+<div class="token-stats">
+<span>进度 <span class="val">64%</span></span>
+<span>价格 <span class="val">0.000045 BNB</span></span>
+<span>筹集 <span class="val">15.3/24 BNB</span></span>
+</div>
+</div>
+<div class="token-card" onclick="openModal('demo2')">
+<div class="token-header">
+<div><span class="token-name">AstroPepe</span> <span class="token-symbol">$APEPE</span></div>
+<span class="token-badge live">发射中</span>
+</div>
+<div class="progress-bar"><div class="progress-fill" style="width:23%"></div></div>
+<div class="token-stats">
+<span>进度 <span class="val">23%</span></span>
+<span>价格 <span class="val">0.000012 BNB</span></span>
+<span>筹集 <span class="val">5.5/24 BNB</span></span>
+</div>
+</div>
+<div class="token-card">
+<div class="token-header">
+<div><span class="token-name">MoonDragon</span> <span class="token-symbol">$MDRG</span></div>
+<span class="token-badge graduated">已毕业 🎓</span>
+</div>
+<div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+<div class="token-stats">
+<span>进度 <span class="val">100%</span></span>
+<span>LP <span class="val" style="color:var(--green)">已烧毁 🔥</span></span>
+<span><a href="https://pancakeswap.finance/swap?chain=bsc" target="_blank" style="font-size:0.78rem">PancakeSwap →</a></span>
+</div>
+</div>
+</div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="how">
+<div class="section-title"><span class="accent">⟩</span> 工作原理</div>
+<div class="steps">
+<div class="step">
+<div class="step-num">01</div>
+<div class="step-title">创建代币</div>
+<div class="step-desc">输入名称、代号、总量。一键部署 BEP-20 到 BSC。</div>
+</div>
+<div class="step">
+<div class="step-num">02</div>
+<div class="step-title">联合曲线</div>
+<div class="step-desc">80% 代币进入曲线。用户用 BNB 买入，价格随购买量上升。</div>
+</div>
+<div class="step">
+<div class="step-num">03</div>
+<div class="step-title">自动毕业</div>
+<div class="step-desc">筹集到目标 BNB 后，代币 + BNB 自动迁移到 PancakeSwap V2。</div>
+</div>
+<div class="step">
+<div class="step-num">04</div>
+<div class="step-title">LP 烧毁</div>
+<div class="step-desc">LP 代币发送到死亡地址。流动性永久锁定，不可撤回。</div>
+</div>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+<p><a href="https://dragonclaw.asia">DragonClaw 龙爪</a> · <a href="https://github.com/draguris/dragonclaw">GitHub</a> · <a href="https://docs.dragonclaw.asia">Docs</a> · <a href="https://x.com/DragonClawCN">X</a></p>
+<p style="margin-top:0.5rem">DragonLaunch 龙爪发射台 — BSC 原生 · 联合曲线 · PancakeSwap V2 毕业 · LP 永久烧毁 · MIT</p>
+</footer>
+
+<!-- BUY/SELL MODAL -->
+<div class="modal-overlay" id="modal">
+<div class="modal">
+<button class="modal-close" onclick="closeModal()">×</button>
+<h2 id="modalTitle">DragonCat $DCAT</h2>
+<div class="token-info" id="modalInfo">价格: 0.000045 BNB · 进度: 64% · 筹集: 15.3/24 BNB</div>
+<div class="tab-row">
+<button class="tab-btn active" id="tabBuy" onclick="switchTab('buy')">买入</button>
+<button class="tab-btn" id="tabSell" onclick="switchTab('sell')">卖出</button>
+</div>
+<div id="buyPanel">
+<div class="form-group">
+<label class="form-label">BNB 数量</label>
+<input class="form-input" id="buyAmount" placeholder="0.1" type="number" step="0.01">
+<div class="form-hint">预估获得: <span id="buyEstimate">~2,222 DCAT</span></div>
+</div>
+<button class="btn-buy" onclick="executeBuy()">买入</button>
+</div>
+<div id="sellPanel" style="display:none">
+<div class="form-group">
+<label class="form-label">代币数量</label>
+<input class="form-input" id="sellAmount" placeholder="1000" type="number">
+<div class="form-hint">预估获得: <span id="sellEstimate">~0.045 BNB</span></div>
+</div>
+<button class="btn-sell" onclick="executeSell()">卖出</button>
+</div>
+</div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+<div class="toast-title" id="toastTitle"></div>
+<div class="toast-msg" id="toastMsg"></div>
+</div>
+
+<script>
+// ═══ State ═══
+let wallet = null;
+let provider = null;
+
+// ═══ Wallet ═══
+async function connectWallet() {
+  if (typeof window.ethereum === 'undefined') {
+    showToast('错误', '请安装 MetaMask 或其他 BSC 钱包');
+    return;
+  }
+  try {
+    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    wallet = accounts[0];
+    // Check BSC network (chainId 56)
+    const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+    if (chainId !== '0x38') {
+      try {
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: '0x38' }],
+        });
+      } catch {
+        showToast('错误', '请切换到 BSC 网络 (Chain ID: 56)');
+        return;
+      }
+    }
+    document.getElementById('connectBtn').textContent = wallet.slice(0, 6) + '...' + wallet.slice(-4);
+    document.getElementById('launchBtn').textContent = '发射代币 🚀';
+    document.getElementById('launchBtn').disabled = false;
+    showToast('已连接', wallet.slice(0, 6) + '...' + wallet.slice(-4));
+  } catch (err) {
+    showToast('错误', err.message);
+  }
+}
+
+// ═══ Create Token ═══
+async function createToken() {
+  if (!wallet) { showToast('错误', '请先连接钱包'); return; }
+
+  const name = document.getElementById('tokenName').value.trim();
+  const symbol = document.getElementById('tokenSymbol').value.trim().toUpperCase();
+  const supply = document.getElementById('tokenSupply').value || '1000000000';
+  const target = document.getElementById('tokenTarget').value || '24';
+
+  if (!name || !symbol) {
+    showToast('错误', '请填写代币名称和代号');
+    return;
+  }
+
+  const btn = document.getElementById('launchBtn');
+  btn.textContent = '部署中...';
+  btn.disabled = true;
+
+  try {
+    // In production, this calls DragonFactory.createToken()
+    // For now, show the confirmation flow
+    showToast('确认交易', `正在部署 ${name} ($${symbol}) — 请在钱包中确认`);
+
+    // Simulated delay for demo
+    await new Promise(r => setTimeout(r, 2000));
+
+    showToast('发射成功! 🚀', `${name} ($${symbol}) 已部署到 BSC。联合曲线已启动。`);
+
+    // Add to grid
+    addTokenCard(name, symbol);
+  } catch (err) {
+    showToast('错误', err.message);
+  } finally {
+    btn.textContent = '发射代币 🚀';
+    btn.disabled = false;
+  }
+}
+
+function addTokenCard(name, symbol) {
+  const grid = document.getElementById('tokensGrid');
+  const card = document.createElement('div');
+  card.className = 'token-card';
+  card.innerHTML = `
+    <div class="token-header">
+      <div><span class="token-name">${name}</span> <span class="token-symbol">$${symbol}</span></div>
+      <span class="token-badge live">发射中</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+    <div class="token-stats">
+      <span>进度 <span class="val">0%</span></span>
+      <span>价格 <span class="val">0.000001 BNB</span></span>
+      <span>筹集 <span class="val">0/24 BNB</span></span>
+    </div>
+  `;
+  grid.insertBefore(card, grid.firstChild);
+}
+
+// ═══ Modal ═══
+function openModal(id) {
+  document.getElementById('modal').classList.add('active');
+}
+function closeModal() {
+  document.getElementById('modal').classList.remove('active');
+}
+function switchTab(tab) {
+  document.getElementById('tabBuy').classList.toggle('active', tab === 'buy');
+  document.getElementById('tabSell').classList.toggle('active', tab === 'sell');
+  document.getElementById('buyPanel').style.display = tab === 'buy' ? 'block' : 'none';
+  document.getElementById('sellPanel').style.display = tab === 'sell' ? 'block' : 'none';
+}
+function executeBuy() {
+  if (!wallet) { showToast('错误', '请先连接钱包'); return; }
+  showToast('买入中', '请在钱包中确认交易...');
+}
+function executeSell() {
+  if (!wallet) { showToast('错误', '请先连接钱包'); return; }
+  showToast('卖出中', '请在钱包中确认交易...');
+}
+
+// ═══ Toast ═══
+function showToast(title, msg) {
+  const toast = document.getElementById('toast');
+  document.getElementById('toastTitle').textContent = title;
+  document.getElementById('toastMsg').textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 4000);
+}
+
+// ═══ Close modal on overlay click ═══
+document.getElementById('modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// ═══ Smooth scroll ═══
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  });
+});
+</script>
+
+</body>
+</html>
