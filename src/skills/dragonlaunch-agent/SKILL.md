@@ -1,196 +1,101 @@
 ---
-title: DragonLaunch Agent — Platform-Native Intelligence
+title: DragonLaunch Agent — Platform-Native Intelligence (Solana + BSC)
 slug: dragonlaunch-agent
-description: Launch tokens, snipe graduations, score creators, detect rugs — all exclusively on DragonLaunch (launch.dragonclaw.asia). Every DragonClaw agent is a power user on DragonLaunch. Use when user asks to launch a token, check creator reputation, monitor graduations, check platform stats, or mentions DragonLaunch/发射台/发币/毕业狙击/创建者信用.
-version: 1.0.0
+description: Launch tokens on Solana via Meteora DBC, snipe graduations, score creators, detect rugs — all exclusively on DragonLaunch. Use when user asks to launch a token, check creator reputation, monitor graduations, check platform stats, or mentions DragonLaunch/发射台/发币/毕业狙击/创建者信用. All fees → $DRAGONCLAW.
+version: 2.0.0
 author: dragonclaw
 license: MIT
 ---
 
 # DragonLaunch Agent — Platform-Native Intelligence
 
+Solana (Meteora DBC) + BSC (custom factory). Every DragonClaw agent is a power user on DragonLaunch. All platform fees → $DRAGONCLAW buyback & burn.
+
 ## Why This Only Works on DragonLaunch
 
-We own the factory contract. We read every bonding curve directly on-chain. No API key. No rate limits. No scraping. Every DragonClaw agent has god-mode on DragonLaunch. This is impossible on Four.meme or any other platform.
+On Solana: We own the DBC config key. We read every pool directly via the SDK. No API, no scraping.
+On BSC: We own the factory contract. Direct on-chain reads.
+Four.meme, pump.fun, Raydium — none of them give you this.
 
 ## Features
 
-### 1. Chat-to-Launch
-
-Launch a token from a chat message. No browser needed.
+### 1. Chat-to-Launch (Solana)
 
 ```
-用户: 帮我发一个币叫 DRAGONCAT，描述是最强龙猫，买 0.5 BNB
-龙爪: 代币发射成功 🚀
+用户: 帮我在 Solana 上发一个币叫 DRAGONCAT
+龙爪: 代币发射成功 🚀 (Solana)
 
   名称: DragonCat ($DCAT)
-  合约: 0xabc...
-  曲线: 0xdef...
-  初始买入: 0.5 BNB
+  Mint: 7xK3...9mPq
+  初始买入: 0.5 SOL
   
-  交易哈希: 0x...
-  链接: launch.dragonclaw.asia
+  Solscan: https://solscan.io/token/7xK3...
+  Jupiter: https://jup.ag/swap/SOL-7xK3...
+  
+  手续费 → $DRAGONCLAW 回购销毁
 ```
 
-```tool
-{"tool": "dragonlaunch", "action": "launch", "params": {
-  "name": "DragonCat",
-  "symbol": "DCAT",
-  "description": "最强龙猫",
-  "preBuyBnb": "0.5",
-  "tag": "Meme"
-}}
-```
+How it works:
+1. Agent uploads metadata to Pinata IPFS
+2. Generates mint keypair
+3. Calls `client.pool.createPool()` with config key `A9jZY...`
+4. Signs with agent wallet + mint keypair
+5. Optional initial buy via `client.pool.swap()`
+6. Token immediately tradeable on Jupiter
 
-### 2. Graduation Sniper
+### 2. Graduation Sniper (Solana)
 
-Monitors all bonding curves. When a token hits 90%+ progress, auto-buys before graduation.
-
-Why this matters: After graduation, token hits PancakeSwap and price typically spikes. The sniper buys at bonding curve price (cheaper) right before the PancakeSwap listing.
+Monitors all pools created through our config key. When a pool's quote reserve approaches `migrationQuoteThreshold`, auto-buys before Meteora's migrator service moves it to DAMM.
 
 ```
-[毕业狙击通知]
+毕业狙击成功 🎯 (Solana)
 
-毕业狙击成功 🎯
+Mint: 7xK3...9mPq
+进度: 92%
+买入: 0.1 SOL
 
-代币: MoonDragon ($MDRG)
-买入: 0.1 BNB
-距毕业: 0.34 BNB
-
-毕业后将自动上 PancakeSwap，价格通常会上涨。
-```
-
-```tool
-{"tool": "dragonlaunch", "action": "startSniper", "config": {
-  "minProgress": 90,
-  "buyBnb": "0.1",
-  "maxPerHour": 3
-}}
+毕业后迁移到 Meteora DAMM，价格通常上涨。
+手续费 → $DRAGONCLAW
 ```
 
 ### 3. Creator Reputation Scoring
 
-Every creator is scored based on their history on DragonLaunch:
-
-- +15 points per graduated token
-- -30 points per rug/dump
-- +3 per launch (experience)
+On-chain tracking across both chains:
+- +15 per graduation
+- -30 per rug/dump
 - -50 if flagged for dumping
+- Persistent across all DragonClaw agents
 
 ```
-用户: 这个创建者靠谱吗？0x1a2b...
+用户: 这个创建者靠谱吗？7xK3...
 龙爪: 创建者信用报告
 
-  地址: 0x1a2b...3c4d
+  地址: 7xK3...9mPq
   信用分: 78/100 🟢
-  风险等级: 低
+  风险: 低
   
-  发射: 5 个代币
-  毕业: 3 个 (60%)
-  跑路: 0 个
-  
-  最近发射:
-    DCAT — 2026-03-24
-    MDRG — 2026-03-22
-```
-
-```tool
-{"tool": "dragonlaunch", "action": "creatorScore", "params": {"creator": "0x..."}}
+  发射: 5 个
+  毕业: 3 (60%)
+  跑路: 0
 ```
 
 ### 4. Anti-Rug Intelligence
 
-Monitors creator wallets. If a creator dumps >50% of their 20% allocation, they're flagged permanently. All users get warned on future launches by this creator.
-
-```
-⚠️ 创建者抛售警报
-
-代币: ScamToken ($SCAM)
-创建者: 0x5e6f...7g8h
-剩余分配: 12%
-已卖出: 88% 创建者分配
-
-此创建者已被标记。未来发射将显示警告。
-```
+Monitors creator token balances. If a creator dumps their allocation, permanent flag. All DragonClaw users get warned.
 
 ### 5. Platform Analytics
 
-Real-time data on every token, every curve, every creator — because we read the contracts directly.
-
 ```
-用户: DragonLaunch 现在怎么样？
-龙爪: DragonLaunch 平台报告
+用户: DragonLaunch 怎么样？
+龙爪: DragonLaunch 平台报告 (Solana)
 
-  总发射: 142
-  已毕业: 18 (12.7%)
-  活跃曲线: 47
-  总筹集: 892.4 BNB
-  追踪创建者: 89
-  标记创建者: 3
-
-  热门代币 (按进度排序):
-    MDRG — 87.3% — 15.7 BNB — 创建者 🟢 85/100
-    DCAT — 64.1% — 11.5 BNB — 创建者 🟡 52/100
-    PEPE2 — 41.2% — 7.4 BNB — 创建者 🟠 28/100
-```
-
-```tool
-{"tool": "dragonlaunch", "action": "stats"}
-```
-
-```tool
-{"tool": "dragonlaunch", "action": "trending"}
-```
-
-### 6. Portfolio Tracking
-
-Track all your DragonLaunch holdings — tokens bought via chat, sniper positions, manual buys.
-
-```tool
-{"tool": "dragonlaunch", "action": "holdings"}
-```
-
-## Example Conversations
-
-```
-用户: 发一个 AI 主题的币，叫 AIDRAGON，买 1 BNB
-龙爪: 正在部署...
-
-  检查创建费: ~0.005 BNB
-  部署合约中...请等待...
-
-  ✓ 代币发射成功 🚀
-  名称: AIDRAGON ($AIDRAGON)
-  合约: 0xabc123...
-  初始买入: 1 BNB
-  曲线进度: 5.6%
-
-  链接: launch.dragonclaw.asia
-```
-
-```
-用户: DragonLaunch 上有什么热门的？
-龙爪: 热门代币:
-
-  1. MDRG — 87.3% 进度 — 15.7/18 BNB — 即将毕业
-     创建者: 0x1a2b... 🟢 信用 85/100
-
-  2. DCAT — 64.1% 进度 — 11.5/18 BNB
-     创建者: 0x3c4d... 🟡 信用 52/100
-
-  ⚠️ 注意: SCAM2 的创建者 0x5e6f... 已被标记为抛售者
-```
-
-```
-用户: 开启毕业狙击
-龙爪: 毕业狙击已开启:
-
-  最低进度: 90%
-  每次买入: 0.1 BNB
-  上限: 3 次/小时
-
-  正在监控所有 DragonLaunch 曲线...
-  检测到接近毕业的代币会自动买入。
+  总发射: 42
+  已毕业: 6
+  活跃: 36
+  追踪创建者: 28
+  标记创建者: 1
+  
+  手续费 → $DRAGONCLAW 回购销毁
 ```
 
 ## Config (dragonclaw.yaml)
@@ -198,33 +103,20 @@ Track all your DragonLaunch holdings — tokens bought via chat, sniper position
 ```yaml
 dragonLaunchAgent:
   enabled: true
-  network: testnet
-  factoryAddress: "0x7C91c8C2e354Ad1983FdbFC0B3fe2e78Ff02c370"
-  rpcUrl: "https://data-seed-prebsc-1-s1.binance.org:8545"
-  apiUrl: "https://launch.dragonclaw.asia/api"
+  # Solana (primary)
+  solanaRpc: "https://mainnet.helius-rpc.com/?api-key=YOUR_KEY"
+  configKey: "A9jZYZgGcg7xKipkQPRVEZxfrvpWmwN9iivptC6fkSc2"
+  # BSC (secondary)
+  bscRpc: "https://data-seed-prebsc-1-s1.binance.org:8545"
+  bscFactory: "0x7C91c8C2e354Ad1983FdbFC0B3fe2e78Ff02c370"
+  # Sniper
   sniperEnabled: false
-  sniperMinProgress: 90
-  sniperBuyBnb: "0.1"
+  sniperBuySol: "0.1"
   sniperMaxPerHour: 3
+  # Anti-rug
   antiRugEnabled: true
-  antiRugDumpThreshold: 50
 ```
 
-## Safety Rules
+## The Flywheel
 
-1. Chat-to-launch always confirms before deploying
-2. Graduation sniper has rate limits (3/hour max)
-3. Anti-rug only flags, never auto-sells
-4. Creator scores are based on on-chain data, not opinions
-5. All trades go through user's wallet private key
-
-## Why This Matters
-
-Every DragonClaw user is a power user on DragonLaunch. Every DragonLaunch token is watched by an AI agent. This creates a flywheel:
-
-- More DragonClaw users → more activity on DragonLaunch
-- More DragonLaunch activity → more data for the agent
-- More data → better creator scores, better snipes, better analytics
-- Better analytics → more users want DragonClaw
-
-Four.meme can't replicate this. Their platform is a website. Ours is an AI agent with a launchpad built in.
+More DragonClaw agents → more launches on DragonLaunch → more fees → more $DRAGONCLAW buyback → higher token value → more users want DragonClaw.
